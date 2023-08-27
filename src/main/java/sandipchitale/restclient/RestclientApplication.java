@@ -4,11 +4,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+
+import java.util.List;
 
 @SpringBootApplication
 public class RestclientApplication {
@@ -16,7 +19,7 @@ public class RestclientApplication {
 
 	@Bean
 	RestClient restClient(RestClient.Builder builder) {
-		return builder.baseUrl("https://jsonplaceholder.typicode.com").build();
+		return builder.baseUrl("https://jsonplaceholder.typicode.com/todos").build();
 	}
 
 	@Bean
@@ -24,15 +27,24 @@ public class RestclientApplication {
 	    return (args) -> {
 			ResponseEntity<Todo> todoResponseEntity = restClient
 					.get()
-					.uri("/todos/1")
+					.uri("/1")
 					.retrieve()
 					.toEntity(Todo.class);
-			System.out.println("Using RestClient: " + todoResponseEntity.getBody());
+			System.out.println("Todo using RestClient: " + todoResponseEntity.getBody());
+
+			ResponseEntity<List<Todo>> todosResponseEntity = restClient
+					.get()
+					.retrieve()
+					.toEntity(new ParameterizedTypeReference<>(){});
+			System.out.println("Todos using RestClient: " + todosResponseEntity.getBody());
 		};
 	}
 
 	interface TodoClient {
-		@GetExchange("/todos/1")
+		@GetExchange
+		List<Todo> getTodos();
+
+		@GetExchange("/1")
 		Todo getTodo();
 	}
 
@@ -45,7 +57,8 @@ public class RestclientApplication {
 	@Bean
 	public CommandLineRunner clrTodoClient (TodoClient todoClient) {
 		return (args) -> {
-			System.out.println("Using TodoClient: " + todoClient.getTodo());
+			System.out.println("Todo using TodoClient: " + todoClient.getTodo());
+			System.out.println("Todos using TodoClient: " + todoClient.getTodos());
 		};
 	}
 
