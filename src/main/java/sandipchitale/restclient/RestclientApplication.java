@@ -52,7 +52,7 @@ public class RestclientApplication {
 	}
 
 	@Bean
-	TodoService todoClient(RestClient restClient) {
+	TodoService todoService(RestClient restClient) {
 		HttpServiceProxyFactory proxyFactory = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
 		return proxyFactory.createClient(TodoService.class);
 	}
