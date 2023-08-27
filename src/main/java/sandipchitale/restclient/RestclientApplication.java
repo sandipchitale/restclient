@@ -35,6 +35,8 @@ public class RestclientApplication {
 			ResponseEntity<List<Todo>> todosResponseEntity = restClient
 					.get()
 					.retrieve()
+					// IMPORTANT: We have to create subclass to capture the generic type
+					// that can be used at runtime.
 					.toEntity(new ParameterizedTypeReference<>(){});
 			System.out.println("Todos using RestClient: " + todosResponseEntity.getBody());
 		};
