@@ -43,7 +43,7 @@ public class RestclientApplication {
 		};
 	}
 
-	interface TodoClient {
+	interface TodoService {
 		@GetExchange
 		List<Todo> getTodos();
 
@@ -52,16 +52,16 @@ public class RestclientApplication {
 	}
 
 	@Bean
-	TodoClient todoClient(RestClient restClient) {
+	TodoService todoClient(RestClient restClient) {
 		HttpServiceProxyFactory proxyFactory = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
-		return proxyFactory.createClient(TodoClient.class);
+		return proxyFactory.createClient(TodoService.class);
 	}
 
 	@Bean
-	public CommandLineRunner clrTodoClient (TodoClient todoClient) {
+	public CommandLineRunner clrTodoClient (TodoService todoService) {
 		return (String... args) -> {
-			System.out.println("Todo using TodoClient: " + todoClient.getTodo(1));
-			System.out.println("Todos using TodoClient: " + todoClient.getTodos());
+			System.out.println("Todo using TodoClient: " + todoService.getTodo(1));
+			System.out.println("Todos using TodoClient: " + todoService.getTodos());
 		};
 	}
 
