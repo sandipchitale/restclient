@@ -25,7 +25,7 @@ public class RestclientApplication {
 
 	@Bean
 	public CommandLineRunner clrRestClient (RestClient restClient) {
-	    return (args) -> {
+	    return (String... args) -> {
 			ResponseEntity<Todo> todoResponseEntity = restClient
 					.get()
 					.uri("/{id}", 1)
@@ -59,7 +59,7 @@ public class RestclientApplication {
 
 	@Bean
 	public CommandLineRunner clrTodoClient (TodoClient todoClient) {
-		return (args) -> {
+		return (String... args) -> {
 			System.out.println("Todo using TodoClient: " + todoClient.getTodo(1));
 			System.out.println("Todos using TodoClient: " + todoClient.getTodos());
 		};
