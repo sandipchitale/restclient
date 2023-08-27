@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.annotation.GetExchange;
@@ -27,7 +28,7 @@ public class RestclientApplication {
 	    return (args) -> {
 			ResponseEntity<Todo> todoResponseEntity = restClient
 					.get()
-					.uri("/1")
+					.uri("/{id}", 1)
 					.retrieve()
 					.toEntity(Todo.class);
 			System.out.println("Todo using RestClient: " + todoResponseEntity.getBody());
@@ -46,8 +47,8 @@ public class RestclientApplication {
 		@GetExchange
 		List<Todo> getTodos();
 
-		@GetExchange("/1")
-		Todo getTodo();
+		@GetExchange("/{id}")
+		Todo getTodo(@PathVariable("id") long id);
 	}
 
 	@Bean
@@ -59,7 +60,7 @@ public class RestclientApplication {
 	@Bean
 	public CommandLineRunner clrTodoClient (TodoClient todoClient) {
 		return (args) -> {
-			System.out.println("Todo using TodoClient: " + todoClient.getTodo());
+			System.out.println("Todo using TodoClient: " + todoClient.getTodo(1));
 			System.out.println("Todos using TodoClient: " + todoClient.getTodos());
 		};
 	}
